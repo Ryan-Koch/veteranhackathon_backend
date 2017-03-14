@@ -87,48 +87,49 @@ class veterans(db.Model):
 		self.email = email
 		self.password = password
 
-def insert_veteran(self, veteran):
-	db.session.add(veteran)
-	db.session.commit()
+	def insert_veteran(veteran):
+		db.session.add(veteran)
+		db.session.commit()
 
-def get_veteran(self, email):
-	veteran = veterans.query.filter(veterans.email == email)
-	return veteran
+	def get_veteran(email):
+		veteran = veterans.query.filter(veterans.email == 'inbox@ryanakoch.com').first()
+		print(veteran)
+		return veteran
 
-def login(self, email, password):
-	veteran = veterans.query(and_(veterans.email == email, veterans.password == password))
-	if veteran:
-		return True
-	return False
-	
+	def login(email, password):
+		veteran = db.session.query(and_(veterans.email == email, veterans.password == password)).first()
+		if veteran:
+			return True
+		return False
+		
 
-@property
-def serialize(self):
-	return {
-		'id' : self.id,
-		'first_name' : self.first_name,
-		'last_name' : self.last_name,
-		'address_1' : self.address_1,
-		'address_2' : self.address_2,
-		'city' : self.city,
-		'state' : self.state,
-		'zip_code' : self.zip_code,
-		'serve' : self.serve,
-		'branch' : self.branch,
-		'active_duty' : self.active_duty,
-		'pre_1980' : self.pre_1980,
-		'discharge_char' : self.discharge_char,
-		'injuries' : self.injuries,
-		'rec_treatment' : self.rec_treatment,
-		'injuries_persist' : self.injuries_persist,
-		'mental_h_need' : self.mental_h_need,
-		'mental_h_issues' : self.mental_h_issues,
-		'sexual_assault' : self.sexual_assault,
-		'combat_zone' : self.combat_zone,
-		'filed_prev' : self.filed_prev,
-		'eligible' : self.eligible,
-		'email' : self.email
-	}
+	@property
+	def serialize(self):
+		return {
+			'id' : self.id,
+			'first_name' : self.first_name,
+			'last_name' : self.last_name,
+			'address_1' : self.address_1,
+			'address_2' : self.address_2,
+			'city' : self.city,
+			'state' : self.state,
+			'zip_code' : self.zip_code,
+			'serve' : self.serve,
+			'branch' : self.branch,
+			'active_duty' : self.active_duty,
+			'pre_1980' : self.pre_1980,
+			'discharge_char' : self.discharge_char,
+			'injuries' : self.injuries,
+			'rec_treatment' : self.rec_treatment,
+			'injuries_persist' : self.injuries_persist,
+			'mental_h_need' : self.mental_h_need,
+			'mental_h_issues' : self.mental_h_issues,
+			'sexual_assault' : self.sexual_assault,
+			'combat_zone' : self.combat_zone,
+			'filed_prev' : self.filed_prev,
+			'eligible' : self.eligible,
+			'email' : self.email
+		}
 
 class blog_posts(db.Model):
 	id = db.Column('post_id', db.Integer, primary_key = True)
@@ -140,7 +141,6 @@ class blog_posts(db.Model):
 		self.content = content
 
 	def insert_post(blog_post):
-		print(db)
 		db.session.add(blog_post)
 		db.session.commit()
 

@@ -22,7 +22,7 @@ def add_blog_post():
 	print("lol adding post")
 	post = blog_posts(datetime.now(), request.args.get('content'))
 	blog_posts.insert_post(post)
-	return "{result : success}"
+	return jsonify("{success : true}")
 
 @app.route('/api/blog', methods=['GET'])
 def get_blog_posts():
@@ -50,13 +50,14 @@ def add_discussion_post():
 	category = request.args.get('category')
 	post = discussion_posts(date_posted, content, reply_to, category)
 	blog_posts.insert_post(post)
-	return "{result : success}"
+	return jsonify("{success : true}")
 
 #Veteran routes
 
 @app.route('/api/veteran', methods=['GET'])
 def get_veteran():
-	veteran = get_veteran(request.args.get('email'))
+	veteran = veterans.get_veteran(request.args.get('email'))
+	print(veteran)
 	return jsonify(veteran.serialize)
 
 @app.route('/api/veteran', methods=['POST'])
@@ -109,9 +110,21 @@ def insert_veteran():
 		email,
 		password)
 
+	print(veteran)
+
 	veterans.insert_veteran(veteran)
 
-	return "{success : true}"
+	return jsonify("{success : true}")
+
+#login
+@app.route('/api/login', methods=['POST'])
+def login():
+	user = request.args.get('email')
+	password = request.args.get('password')
+
+	result = veterans.login(user, password)
+
+	return jsonify("{ result : " + str(result) + " }")
 
 
 if __name__ == '__main__':
