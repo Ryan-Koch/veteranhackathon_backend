@@ -177,6 +177,7 @@ def forum_search():
 def top_three():
 	email = request.args.get("email")
 	user = veterans.get_veteran(email)
+	print(user)
 
 	o_veterans = veterans.get_all_veterans()
 	veteran_list = []
@@ -184,20 +185,25 @@ def top_three():
 	for veteran in o_veterans:
 		points = 0
 
-		if veteran.branch in user.branch:
-			points += 1
+		if veteran.branch and user.branch:
+			if veteran.branch in user.branch:
+				points += 1
+		
+		if veteran.discharge_char and user.discharge_char:
+			if veteran.discharge_char in user.discharge_char:
+				points += 1
+		
+		if veteran.injuries and user.injuries:
+			if veteran.injuries in user.injuries:
+				points += 1
 
-		if veteran.discharge_char in user.discharge_char:
-			points += 1
+		if veteran.mental_h_issues and user.mental_h_issues:
+			if veteran.mental_h_issues in user.mental_h_issues:
+				points += 1
 
-		if veteran.injuries in user.injuries:
-			points += 1
-
-		if veteran.mental_h_issues in user.mental_h_issues:
-			points += 1
-
-		if veteran.combat_zone == user.combat_zone:
-			points += 1
+		if veteran.combat_zone and user.combat_zone:
+			if veteran.combat_zone == user.combat_zone:
+				points += 1
 
 		score = (points / 5) * 100
 		if veteran.email != user.email:
