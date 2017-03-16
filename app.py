@@ -7,6 +7,8 @@ import json
 from database import *
 import datetime
 from datetime import datetime
+from fill_pdf import *
+import fill_pdf
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vetbenefits.sqlite3'
@@ -83,6 +85,8 @@ def insert_veteran():
 	combat_zone = request.args.get('combat_zone')
 	filed_prev = request.args.get('filed_prev')
 	eligible = request.args.get('eligible')
+	if eligible == None:
+		eligible = ""
 	email = request.args.get('email')
 	password = request.args.get('password')
 
@@ -110,11 +114,19 @@ def insert_veteran():
 		email,
 		password)
 
-	print(veteran)
-
 	veterans.insert_veteran(veteran)
 
 	return jsonify("{success : true}")
+
+#veteran PDF
+@app.route('/api/veteran/pdf', methods=['GET'])
+def get_pdf():
+	email = request.args.get('email')
+	veteran = veterans.get_veteran(email)
+	fill_pdf.execute(veteran)
+	url = "http://50.116.44.47:8080/" + email + "_VBA-21-526EZ-ARE.pdf"
+	return jsonify("{ url : " + url + " }") 
+
 
 #login
 @app.route('/api/login', methods=['POST'])
@@ -126,6 +138,10 @@ def login():
 
 	return jsonify("{ result : " + str(result) + " }")
 
+
+def get_file_contents(filename):
+	with open(filename) as f:
+		return f.read()
 
 if __name__ == '__main__':
 	db.init_app(app)
