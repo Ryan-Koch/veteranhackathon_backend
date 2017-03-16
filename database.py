@@ -95,6 +95,10 @@ class veterans(db.Model):
 		veteran = veterans.query.filter(veterans.email == 'inbox@ryanakoch.com').first()
 		print(veteran)
 		return veteran
+	@classmethod
+	def get_all_veterans(cls):
+		all_veterans = veterans.query.all()
+		return all_veterans
 
 	def login(email, password):
 		veteran = db.session.query(and_(veterans.email == email, veterans.password == password)).first()

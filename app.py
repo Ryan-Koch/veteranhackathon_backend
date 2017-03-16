@@ -10,6 +10,7 @@ from datetime import datetime
 from fill_pdf import *
 import fill_pdf
 import requests
+from operator import itemgetter
 
 
 app = Flask(__name__)
@@ -149,12 +150,16 @@ def forum_search():
 	
 	if veteran.branch:
 		search_terms.append(veteran.branch)
+
 	if veteran.discharge_char:
 		search_terms.append(veteran.discharge_char)
+
 	if veteran.injuries:
 		search_terms.append(veteran.injuries)
+
 	if veteran.mental_h_issues:
 		search_terms.append(veteran.mental_h_issues)
+
 	if veteran.combat_zone:
 		search_terms.append("war")
 
@@ -166,6 +171,53 @@ def forum_search():
 			objects.append(r.text)
 
 	return jsonify(objects)
+
+#top 3 accounts like you
+@app.route('/api/veteran/yourtop3')
+def top_three():
+	email = request.args.get("email")
+	user = veterans.get_veteran(email)
+
+	o_veterans = veterans.get_all_veterans()
+	veteran_list = []
+
+	for veteran in o_veterans:
+		points = 0
+
+		if veteran.branch in user.branch:
+			points += 1
+
+		if veteran.discharge_char in user.discharge_char:
+			points += 1
+
+		if veteran.injuries in user.injuries:
+			points += 1
+
+		if veteran.mental_h_issues in user.mental_h_issues:
+			points += 1
+
+		if veteran.combat_zone == user.combat_zone:
+			points += 1
+
+		score = (points / 5) * 100
+		if veteran.email != user.email:
+			veteran_list.append([veteran.email, score])
+
+	veteran_list_sorted = sorted(veteran_list, key=itemgetter(1), reverse=True)
+
+	top3 = veteran_list_sorted[:3]
+	api_key = "3480b7601125e759b59927445f9a0f9b5d96008aa7ce19d9d577e1209cc858e8"
+	data = []
+	for v in top3:
+		url = "http://forum.theserviceconnection.org/admin/users/list/active.json?" + "filter=" + v[0] + "&api_key=" + api_key
+		r = requests.get(url)
+		d = json.loads(r.text)
+		d[0]["score"] = v[1]
+		data.append(d)
+
+	return jsonify(data)
+
+
 
 
 def get_file_contents(filename):
