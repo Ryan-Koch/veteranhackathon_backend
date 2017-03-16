@@ -9,6 +9,8 @@ import datetime
 from datetime import datetime
 from fill_pdf import *
 import fill_pdf
+import requests
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vetbenefits.sqlite3'
@@ -137,6 +139,33 @@ def login():
 	result = veterans.login(user, password)
 
 	return jsonify("{ result : " + str(result) + " }")
+
+#forum search
+@app.route('/api/veteran/customizer')
+def forum_search():
+	veteran = veterans.get_veteran(request.args.get('email'))
+	search_terms = []
+	objects = []
+	
+	if veteran.branch:
+		search_terms.append(veteran.branch)
+	if veteran.discharge_char:
+		search_terms.append(veteran.discharge_char)
+	if veteran.injuries:
+		search_terms.append(veteran.injuries)
+	if veteran.mental_h_issues:
+		search_terms.append(veteran.mental_h_issues)
+	if veteran.combat_zone:
+		search_terms.append("war")
+
+	for term in search_terms:
+		url = "http://forum.theserviceconnection.org/search/query.json?term=" + term
+		r = requests.get(url)
+		check = json.loads(r.text)
+		if check['posts']:
+			objects.append(r.text)
+
+	return jsonify(objects)
 
 
 def get_file_contents(filename):
