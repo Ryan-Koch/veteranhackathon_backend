@@ -116,5 +116,6 @@ def build_fields(veteran):
 	return fields
 
 def execute(veteran):
+	print(veteran)
 	fields = build_fields(veteran)
 	write_values(fields)

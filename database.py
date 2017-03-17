@@ -103,17 +103,11 @@ class veterans(db.Model):
 			return True
 		return False
 
-	def get_veteran(email):
-		print(email)
-		veteran = veterans.query.filter(veterans.email == email).first()
+	def get_veteran(mail):
+		print(mail)
+		veteran = veterans.query.filter(veterans.email == mail).first()
 		print(veteran)
-		if veteran:
-			return veteran
-		return False
-
-
-
-
+		return veteran
 
 	@property
 	def serialize(self):
