@@ -27,7 +27,7 @@ def add_blog_post():
 	print("lol adding post")
 	post = blog_posts(datetime.now(), request.args.get('content'))
 	blog_posts.insert_post(post)
-	return jsonify("{success : true}")
+	return jsonify({'success' : true})
 
 @app.route('/api/blog', methods=['GET'])
 def get_blog_posts():
@@ -55,7 +55,7 @@ def add_discussion_post():
 	category = request.args.get('category')
 	post = discussion_posts(date_posted, content, reply_to, category)
 	blog_posts.insert_post(post)
-	return jsonify("{success : true}")
+	return jsonify({'success' : true})
 
 #Veteran routes
 
@@ -128,7 +128,7 @@ def get_pdf():
 	veteran = veterans.get_veteran(email)
 	fill_pdf.execute(veteran)
 	url = "http://50.116.44.47:8080/" + email + "_VBA-21-526EZ-ARE.pdf"
-	return jsonify("{ url : " + url + " }") 
+	return jsonify({'url' : url}) 
 
 
 #login
@@ -139,7 +139,7 @@ def login():
 
 	result = veterans.login(user, password)
 
-	return jsonify("{ result : " + str(result) + " }")
+	return jsonify({'result' : result})
 
 #forum search
 @app.route('/api/veteran/customizer')
