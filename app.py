@@ -125,11 +125,12 @@ def insert_veteran():
 @app.route('/api/veteran/pdf', methods=['GET'])
 def get_pdf():
 	email = request.args.get('email')
-	veteran = veterans.get_veteran(email)
+	print(email)
+	#veteran = database.veterans.get_veteran(email)
+	veteran = database.veterans.query.filter(veterans.email == email).first()
 	fill_pdf.execute(veteran)
 	url = "http://50.116.44.47:8080/" + email + "_VBA-21-526EZ-ARE.pdf"
 	return jsonify({'url' : url}) 
-
 
 #login
 @app.route('/api/login', methods=['POST'])
@@ -144,7 +145,8 @@ def login():
 #forum search
 @app.route('/api/veteran/customizer')
 def forum_search():
-	veteran = veterans.get_veteran(request.args.get('email'))
+	email = request.args.get("email")
+	veteran = database.veterans.query.filter(veterans.email == email).first()
 	search_terms = []
 	objects = []
 	
@@ -176,7 +178,7 @@ def forum_search():
 @app.route('/api/veteran/yourtop3')
 def top_three():
 	email = request.args.get("email")
-	user = veterans.get_veteran(email)
+	user = database.veterans.query.filter(veterans.email == email).first()
 	print(user)
 
 	o_veterans = veterans.get_all_veterans()

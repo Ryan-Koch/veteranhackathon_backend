@@ -91,21 +91,29 @@ class veterans(db.Model):
 		db.session.add(veteran)
 		db.session.commit()
 
-	def get_veteran(email):
-		veteran = veterans.query.filter(veterans.email == 'inbox@ryanakoch.com').first()
-		print(veteran)
-		return veteran
 	@classmethod
 	def get_all_veterans(cls):
 		all_veterans = veterans.query.all()
 		return all_veterans
 
 	def login(email, password):
+		print(email)
 		veteran = db.session.query(and_(veterans.email == email, veterans.password == password)).first()
 		if veteran:
 			return True
 		return False
-		
+
+	def get_veteran(email):
+		print(email)
+		veteran = veterans.query.filter(veterans.email == email).first()
+		print(veteran)
+		if veteran:
+			return veteran
+		return False
+
+
+
+
 
 	@property
 	def serialize(self):
@@ -194,4 +202,5 @@ class discussion_posts(db.Model):
 			'reply_to' : self.reply_to,
 			'category' : self.category
 		}
+
 

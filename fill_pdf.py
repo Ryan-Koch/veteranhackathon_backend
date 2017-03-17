@@ -59,6 +59,7 @@ def select_veteran(email):
 
 def build_fields(veteran):
 	fields = get_fields("VBA-21-526EZ-ARE.pdf")
+	print(veteran.email)
 
 	fields["F[0].Page_8[0].PreferredEmailAddress[0]"] = veteran.email
 	fields["F[0].Page_8[0].CurrentMailingAddress_NumberAndStreet[0]"] = veteran.address_1
